@@ -1,0 +1,84 @@
+---
+/* Component for rendering list previews of post default post and review types */
+import type { CollectionEntry } from "astro:content";
+import Ornament from "@components/document/Ornament.astro";
+import Rating from "@components/books/Rating.astro";
+import { format } from "@formkit/tempo";
+import { getEntry } from "astro:content";
+
+interface Props {
+    post: CollectionEntry<"posts"> | CollectionEntry<"reviews">;
+    HeadingLevel?: "h2" | "h3";
+}
+
+const { post, HeadingLevel = "h3" } = Astro.props;
+
+let category: CollectionEntry<"postCategories"> | undefined = undefined;
+if (post.collection == "posts") {
+    category = await getEntry(post.data.category);
+}
+
+const href =
+    post.collection == "posts"
+        ? `/posts/${post.id}`
+        : `/library/reviews/${post.id}`;
+---
+
+<article
+    class="post-preview-list"
+    data-type={post.collection == "posts" ? "default" : "review"}
+>
+    <time
+        datetime={format({
+            date: post.data.date,
+            format: "YYYY-MM-DD",
+            tz: "UTC",
+        })}
+        >{
+            format({ date: post.data.date, format: "MMM D, YYYY", tz: "UTC" })
+        }</time
+    >
+    <div class="text-wrapper | flow" data-tempo="vivace">
+        <HeadingLevel class="post-title">
+            <a href={href}>{post.data.title}</a>
+        </HeadingLevel>
+        {post.data.summary && <p>{post.data.summary}</p>}
+        {
+            category && (
+                <div class="post-category | with-ornament | cluster">
+                    <Ornament
+                        color="var(--site-accent)"
+                        name={category.data.ornament}
+                        size={18}
+                    />
+                    <span>{category.data.title}</span>
+                </div>
+            )
+        }
+        {post.collection == "reviews" && <Rating rating={post.data.rating} />}
+    </div>
+</article>
+
+<style>
+    .post-preview-list {
+        display: grid;
+        grid-template-columns: minmax(7.5rem, 0.5fr) 3fr;
+        gap: var(--space-l);
+    }
+
+    time {
+        margin-block-start: 0.75rem;
+        font-size: var(--step--1);
+    }
+
+    .post-title {
+        font-size: var(--step-2);
+    }
+
+    @media screen and (max-width: 640px) {
+        .post-preview-list {
+            grid-template-columns: 1fr;
+            gap: var(--space-2xs);
+        }
+    }
+</style>

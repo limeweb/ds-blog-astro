@@ -1,0 +1,98 @@
+---
+import type { MarkdownHeading } from "astro";
+
+interface Props {
+    headings: MarkdownHeading[];
+}
+
+const { headings } = Astro.props;
+// console.log(headings);
+
+interface TOCEntry extends MarkdownHeading {
+    children?: MarkdownHeading[];
+}
+
+const toc: TOCEntry[] = [];
+for (let i = 0; i < headings.length; i++) {
+    const entry = headings[i];
+    if (entry.depth == 2) {
+        toc.push({
+            ...entry,
+            children: [],
+        });
+    }
+    if (entry.depth == 3) {
+        const lastH2 = toc.findLast((item) => item.depth == 2);
+        lastH2?.children?.push(entry);
+    }
+}
+---
+
+<details class="post-toc">
+    <summary>Show Table of Contents</summary>
+    <ol data-level="2">
+        {
+            toc.map((entry) => (
+                <li>
+                    <a class="toc-link" href={`#${entry.slug}`}>
+                        {entry.text}
+                    </a>
+                    {entry.children && entry.children.length > 0 && (
+                        <ol data-level="3">
+                            {entry.children.map((childEntry) => (
+                                <li>
+                                    <a
+                                        class="toc-link"
+                                        href={`#${childEntry.slug}`}
+                                    >
+                                        {childEntry.text}
+                                    </a>
+                                </li>
+                            ))}
+                        </ol>
+                    )}
+                </li>
+            ))
+        }
+    </ol>
+</details>
+
+<style>
+    .post-toc {
+        margin-block-start: var(--space-xs); /* --space-m */
+    }
+
+    summary {
+        font-size: var(--step--1);
+        font-weight: 700;
+        padding: 0.5rem 0px;
+        /* border: 1px solid var(--site-border); */
+    }
+
+    li {
+        margin-block-start: 4px;
+    }
+
+    ol[data-level="2"] {
+        list-style: decimal;
+        padding-left: 2.25rem;
+        margin-block-start: var(--space-2xs);
+        margin-inline-start: 4px;
+        border-inline-start: 1px solid var(--site-accent);
+
+        & > li:first-child {
+            margin-block-start: 0;
+        }
+    }
+
+    ol[data-level="3"] {
+        padding-inline-start: var(--space-s);
+        list-style: lower-roman;
+    }
+
+    @media screen and (max-width: 640px) {
+        li {
+            margin-block-start: var(--space-s);
+        }
+    }
+</style>

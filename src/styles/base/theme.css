@@ -1,0 +1,62 @@
+:root {
+    --color-primary: rgb(0, 125, 146); /* #007d91; */
+    --color-parchment: rgb(249, 248, 244); /*#f6f1ea;*/
+    --color-parchment-light: #fbf7f1;
+    --color-parchment-dark: #eeeae1; /*#e8e4dc;*/
+    --color-neutral-dark: rgb(39, 38, 36); /*#25221f;*/
+
+    --site-text: var(--color-neutral-dark);
+    --site-text--heading: var(--color-neutral-dark);
+    --site-text--reverse: var(--color-parchment);
+    --site-accent: var(--color-primary); /* #1a65ca; */
+    /* --site-text--light: var(--neutral-5); */
+    /* --site-text--reverse: white; */
+    /* --site-text--primary: var(--primary-4); */
+    --site-bg: var(--color-parchment);
+    --site-panel-bg: var(--color-parchment-light); /* pretty close to amber-1 */
+    --site-tooltip-bg: var(--color-neutral-dark);
+    --site-border: var(--color-parchment-dark);
+    /* --site-icon: var(--primary-3); */
+
+    /* Other theme variables */
+    --rounded-xs: 0.25rem;
+    --rounded-sm: 0.5rem;
+    --rounded-md: 1rem;
+    --rounded-lg: 2rem;
+    --default-aspect-ratio: 3/2;
+    --shadow-none: 0px 0px 0px rgb(0 0 0 / 0);
+    --shadow-base: 0px 4px 16px rgb(0 0 0 / 0.05);
+    --shadow-large: 0px 4px 32px rgb(0 0 0 / 0.12);
+    --sidebar-transition: all 0.2s ease-in-out;
+}
+
+body {
+    color: var(--site-text);
+    background-color: var(--site-bg);
+    background: linear-gradient(
+            to right,
+            color-mix(in srgb, var(--site-bg), transparent 93%),
+            var(--site-bg) 20%,
+            var(--site-bg) 80%,
+            color-mix(in srgb, var(--site-bg), transparent 93%)
+        ),
+        repeat url("/images/hip-square.webp") 0% 0% / 250px;
+    min-height: 100dvh;
+}
+
+:is(h1, h2, h3, h4, h5, h6) {
+    color: var(--site-text--heading);
+}
+
+@media screen and (max-width: 640px) {
+    body {
+        background: linear-gradient(
+                to right,
+                color-mix(in srgb, var(--site-bg), transparent 90%),
+                var(--site-bg) 10%,
+                var(--site-bg) 90%,
+                color-mix(in srgb, var(--site-bg), transparent 90%)
+            ),
+            repeat url("/images/hip-square.webp") 0% 0% / 250px;
+    }
+}

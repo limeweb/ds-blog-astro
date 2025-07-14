@@ -1,0 +1,8 @@
+name = "ds-blog-astro"
+compatibility_date = "2025-03-25"
+routes = [
+    { pattern = "daniel-saunders.com", custom_domain = true }
+]
+
+[assets]
+directory = "./dist"

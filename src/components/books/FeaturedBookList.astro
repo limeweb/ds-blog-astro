@@ -1,0 +1,66 @@
+---
+import BookPreview from "@components/books/BookPreview.astro";
+import { Image } from "astro:assets";
+import RemoteImage from "@components/document/RemoteImage.astro";
+import { getEntries } from "astro:content";
+
+interface Props {
+    ids: string[];
+    cols?: 3 | 4;
+}
+
+const { ids, cols = 4 } = Astro.props;
+
+const books = await getEntries<"books">(
+    ids.map((id) => {
+        return {
+            collection: "books",
+            id,
+        };
+    })
+);
+---
+
+<ul
+    class="featured-book-list | fluid-grid"
+    data-columns={cols}
+    data-list="special"
+>
+    {
+        books.map((book) => (
+            <li>
+                <BookPreview book={book} />
+            </li>
+        ))
+    }
+</ul>
+
+<style>
+    .fluid-grid {
+        --grid-item-min-size: 10rem;
+        column-gap: 1.5rem;
+        row-gap: var(--space-l);
+
+        &[data-columns="3"] {
+            --grid-item-min-size: 12rem;
+        }
+    }
+
+    /* .image-wrapper {
+        position: relative;
+        display: block;
+
+        &:hover img {
+            box-shadow: var(--shadow-large);
+            transform: translateY(-0.75rem);
+        }
+    }
+
+    .title {
+        margin-block-start: var(--space-xs);
+        font-size: var(--step-0);
+        font-family: var(--font-heading);
+        font-weight: var(--font-heading-weight);
+        line-height: var(--leading-tight);
+    } */
+</style>

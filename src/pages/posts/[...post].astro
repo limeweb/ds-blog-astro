@@ -1,0 +1,166 @@
+---
+import { getCollection, getEntries, getEntry, render } from "astro:content";
+import Backlinks from "@components/posts/Backlinks.astro";
+import Breadcrumbs from "@components/navigation/Breadcrumbs.astro";
+import type { CollectionEntry } from "astro:content";
+import Ornament from "@components/document/Ornament.astro";
+import PageHeader from "@components/document/PageHeader.astro";
+import PageWrapper from "@components/document/PageWrapper.astro";
+import PostInfo from "@components/posts/PostInfo.astro";
+import TableOfContents from "@components/posts/TableOfContents.astro";
+import Tag from "@components/posts/Tag.astro";
+import { format } from "@formkit/tempo";
+import { getCollectionMeta } from "@utils/meta";
+
+export async function getStaticPaths() {
+    const posts = await getCollection(
+        "posts",
+        ({ data }) => data.draft != true
+    );
+
+    return posts.map((post) => ({
+        params: {
+            post: post.id,
+        },
+        props: { posts, post },
+    }));
+}
+
+const { posts, post } = Astro.props;
+
+const { Content, headings } = await render(post);
+const category = await getEntry(post.data.category);
+let tags = undefined;
+if (post.data.tags) {
+    tags = await getEntries(post.data.tags);
+}
+// console.log(headings);
+let backlinks: Array<CollectionEntry<"posts"> | CollectionEntry<"reviews">> =
+    [];
+/* WARN: gonna be slow */
+/* TODO: regexp for url that includes optional anchor heading at the end, i.e. `#some-heading` */
+/* see @link https://scripter.co/parsing-backlinks-in-hugo/ */
+for (let i = 0; i < posts.length; i++) {
+    const entry = posts[i];
+    // search raw/uncompiled markdown for links beginning with `(/posts/...)` or `"/posts/..."`
+    // ["(](\/posts\/\S+)[")]
+    // switch to concatenated value using current `post.id` from dynamic route
+    const regexp = new RegExp('["(]/posts/' + post.id + '[")]', "g");
+    const res = entry.body?.search(regexp);
+    if (res !== -1) {
+        // console.log('MATCHED', res)
+        backlinks.push(entry);
+    }
+}
+---
+
+<PageWrapper pageID={post.id} pageMeta={getCollectionMeta(post)}>
+    <div class="content-wrapper paragraph">
+        <Breadcrumbs collection="posts" />
+        <PageHeader
+            preview={post.data.summary}
+            title={post.data.title}
+            type="Post"
+        />
+        <PostInfo>
+            <p>
+                <strong>Posted: </strong>
+                <time
+                    datetime={format({
+                        date: post.data.date,
+                        format: "YYYY-MM-DD",
+                        tz: "UTC",
+                    })}
+                    >{
+                        format({
+                            date: post.data.date,
+                            format: "MMM D, YYYY",
+                            tz: "UTC",
+                        })
+                    }</time
+                >
+            </p>
+            {
+                post.data.updated_date && (
+                    <p>
+                        <strong>Last Updated: </strong>
+                        <time
+                            datetime={format({
+                                date: post.data.updated_date,
+                                format: "YYYY-MM-DD",
+                                tz: "UTC",
+                            })}
+                        >
+                            {format({
+                                date: post.data.updated_date,
+                                format: "MMM D, YYYY",
+                                tz: "UTC",
+                            })}
+                        </time>
+                    </p>
+                )
+            }
+            {
+                post.data.archived && (
+                    <p class="post-category cluster with-ornament">
+                        <Ornament
+                            color="var(--site-accent)"
+                            name="dagger"
+                            size={10}
+                        />
+                        Archived
+                    </p>
+                )
+            }
+            <p class="post-category | with-ornament | cluster">
+                <Ornament
+                    color="var(--site-accent)"
+                    name={category.data.ornament}
+                    size={18}
+                />
+                <a href={`/posts/${category.id}`}>{category.data.title}</a>
+            </p>
+        </PostInfo>
+        {headings.length > 0 && <TableOfContents headings={headings} />}
+    </div>
+    <div class="post-content | long-text">
+        <Content />
+        <div class="post-endcap">
+            <Ornament color="var(--site-accent)" name="bracket" size={20} />
+        </div>
+    </div>
+    <footer class="post-footer | content-wrapper paragraph">
+        <a href="#main-content">Back to Top</a>
+        {
+            backlinks.length > 0 && (
+                <Backlinks backlinks={backlinks} type="posts" />
+            )
+        }
+        {
+            tags && (
+                <div class="tags">
+                    <div class="heading | small-title" id="tags">
+                        Tags
+                    </div>
+                    <div class="list | cluster">
+                        {tags.map((tag) => (
+                            <Tag tag={tag} />
+                        ))}
+                    </div>
+                </div>
+            )
+        }
+    </footer>
+</PageWrapper>
+
+<style>
+    .post-content {
+        margin-block-start: var(--space-l); /* xl */
+    }
+
+    .tags {
+        & .list {
+            margin-block-start: var(--space-3xs);
+        }
+    }
+</style>

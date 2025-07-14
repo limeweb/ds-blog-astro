@@ -1,0 +1,122 @@
+---
+import { getEntry } from "astro:content";
+import v from "voca";
+
+interface Props {
+    collection?: "posts" | "reviews" | "books" | "tags" | "pages";
+}
+
+type Breadcrumb = {
+    title: string;
+    href: string;
+};
+
+const { collection = "pages" } = Astro.props;
+
+const urlParts = Astro.url.pathname.split("/").filter(Boolean);
+const breadcrumbs: Breadcrumb[] = [{ title: "Index", href: "/" }];
+
+// loop through url parts to build breadcrumb items
+for (let i = 0; i < urlParts.length; i++) {
+    // get url parts
+    const urlPart = urlParts[i];
+    const lastHref = breadcrumbs[i].href;
+    let currentHref = "";
+    if (lastHref == "/") {
+        currentHref = lastHref + urlPart;
+    } else {
+        currentHref = `${lastHref}/${urlPart}`;
+    }
+
+    // initialize breadcrumb
+    const breadcrumb: Breadcrumb = {
+        title: "",
+        href: "",
+    };
+
+    // search collection for id matches to get full title
+    if (["posts", "reviews", "tags", "books"].includes(collection)) {
+        // if not last, simply capitalize url part as shortcut
+        if (!(i == urlParts.length - 1)) {
+            breadcrumb.title = v.capitalize(urlPart);
+        } else {
+            if (collection == "posts") {
+                // get post id from url by slicing `/posts/`
+                let postID = Astro.url.pathname.slice(7);
+                // remove trailing slash if exists (for build)
+                if (postID.endsWith("/")) {
+                    postID = postID.slice(0, -1);
+                }
+                const postEntry = await getEntry("posts", postID);
+                breadcrumb.title = postEntry?.data.title ?? "";
+            } else if (collection == "reviews") {
+                // get review id form url by slicing `/library/reviews/`
+                let reviewID = Astro.url.pathname.slice(17);
+                // remove trailing slash if exists (for build)
+                if (reviewID.endsWith("/")) {
+                    reviewID = reviewID.slice(0, -1);
+                }
+                const reviewEntry = await getEntry("reviews", reviewID);
+                breadcrumb.title = reviewEntry?.data.title ?? "";
+            } else if (collection == "tags") {
+                // get tag id from url by slicing `/posts/tags/`
+                let tagID = Astro.url.pathname.slice(12);
+                // remove trailing slash if exists (for build)
+                if (tagID.endsWith("/")) {
+                    tagID = tagID.slice(0, -1);
+                }
+                const tagEntry = await getEntry("postTags", tagID);
+                breadcrumb.title = tagEntry?.data.title ?? "";
+            } else if (collection == "books") {
+                // get book id form url by slicing `/library/books/`
+                let bookID = Astro.url.pathname.slice(15);
+                // remove trailing slash if exists (for build)
+                if (bookID.endsWith("/")) {
+                    bookID = bookID.slice(0, -1);
+                }
+                const bookEntry = await getEntry("books", bookID);
+                breadcrumb.title = bookEntry?.data.Title ?? "";
+            }
+        }
+    } else if (collection == "pages") {
+        breadcrumb.title = v.capitalize(urlPart);
+    }
+
+    breadcrumb.href = currentHref;
+
+    breadcrumbs.push(breadcrumb);
+}
+---
+
+<header>
+    <nav aria-label="Breadcrumbs" class="breadcrumbs">
+        <ul class="cluster">
+            {breadcrumbs.map((breadcrumb, i) => (
+                <li>
+                    {!(i == breadcrumbs.length -1) ? (
+                        <a href={breadcrumb.href}>{breadcrumb.title}</a>
+                        <span class="divider">/</span>
+                    ) : (
+                        <p>{breadcrumb.title}</p>
+                    )}
+                </li>
+            ))}
+        </ul>
+    </nav>
+</header>
+
+<style>
+    .breadcrumbs {
+        font-size: var(--step--1);
+        margin-block-start: var(--space-xs);
+    }
+
+    .cluster {
+        --cluster-space: var(--space-3xs);
+    }
+
+    .divider {
+        margin-inline-start: var(--space-3xs);
+        opacity: 0.2;
+    }
+</style>

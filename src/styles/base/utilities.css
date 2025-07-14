@@ -1,0 +1,107 @@
+/* Typography */
+.text-step--2 {
+    font-size: var(--step--2);
+}
+
+.text-step--1 {
+    font-size: var(--step--1);
+}
+
+.text-step-0 {
+    font-size: var(--step-0);
+}
+
+.text-step-1 {
+    font-size: var(--step-1);
+}
+
+.text-step-2 {
+    font-size: var(--step-2);
+}
+
+.text-step-3 {
+    font-size: var(--step-3);
+}
+
+.text-step-4 {
+    font-size: var(--step-4);
+}
+
+.text-step-5 {
+    font-size: var(--step-5);
+}
+
+.text-step-6 {
+    font-size: var(--step-6);
+}
+
+.text-center {
+    text-align: center;
+}
+
+/* Spacing */
+.section-spacing {
+    margin-block: var(--section-spacing);
+}
+
+.section-spacing-top {
+    margin-block-start: var(--section-spacing);
+}
+
+.section-spacing-bottom {
+    margin-block-end: var(--section-spacing);
+}
+
+.section-padding {
+    padding-block: var(--section-spacing);
+}
+
+.section-padding-top {
+    padding-block-start: var(--section-spacing);
+}
+
+.section-padding-bottom {
+    padding-block-end: var(--section-spacing);
+}
+
+.space-2xs-top {
+    margin-block-start: var(--space-2xs);
+}
+
+.space-xs-top {
+    margin-block-start: var(--space-xs);
+}
+
+.space-s-top {
+    margin-block-start: var(--space-s);
+}
+
+.space-m-top {
+    margin-block-start: var(--space-m);
+}
+
+.space-l-top {
+    margin-block-start: var(--space-l);
+}
+
+.space-xl-top {
+    margin-block-start: var(--space-xl);
+}
+
+.space-2xl-top {
+    margin-block-start: var(--space-2xl);
+}
+
+.list-spacer {
+    margin-block-start: var(--space-xl);
+}
+
+/* Position */
+.relative {
+    position: relative;
+}
+
+/* Colors */
+.text-white {
+    color: white;
+}

@@ -1,0 +1,18 @@
+---
+import type { CollectionEntry } from "astro:content";
+
+interface Props {
+    tag: CollectionEntry<"postTags">;
+}
+
+const { tag } = Astro.props;
+---
+
+<!-- prettier-ignore -->
+<a class="tag" href={`/posts/tags/${tag.id}`}>{`#${tag.data.title}`}</a>
+
+<style>
+    .tag {
+        font-size: var(--step--1);
+    }
+</style>

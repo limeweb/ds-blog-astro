@@ -1,0 +1,89 @@
+---
+import Breadcrumbs from "@components/navigation/Breadcrumbs.astro";
+import Ornament from "@components/document/Ornament.astro";
+import PageHeader from "@components/document/PageHeader.astro";
+import PageWrapper from "@components/document/PageWrapper.astro";
+import Tag from "@components/posts/Tag.astro";
+import { getCollection } from "astro:content";
+
+const categories = await getCollection("postCategories");
+const tags = await getCollection("postTags");
+---
+
+<PageWrapper>
+    <div class="content-wrapper paragraph">
+        <Breadcrumbs />
+        <PageHeader title="Post Taxonomies">
+            <div class="preview">
+                <p>All the ways of grouping posts.</p>
+            </div>
+        </PageHeader>
+        <div class="list-spacer">
+            <section aria-labelledby="posts" class="posts">
+                <h2 class="small-title" id="posts">Posts</h2>
+                <ul class="list | cluster">
+                    <li><a href="/posts">All Posts</a></li>
+                    <li><a href="/posts/archive">Archived Posts</a></li>
+                </ul>
+            </section>
+            <section aria-labelledby="categories" class="categories">
+                <h2 class="small-title" id="categories">Categories</h2>
+                <ul class="list | cluster">
+                    {
+                        categories.map((category) => (
+                        <li class="post-category | with-ornament | cluster">
+                            <Ornament name={category.data.ornament} size={20} />
+                            <div>
+                                <!-- prettier-ignore -->
+                                <a href={`/posts/${category.id}`}>{category.data.title}</a>
+                            </div>
+                        </li>
+                        ))
+                    }
+                </ul>
+            </section>
+            <section aria-labelledby="tags" class="tags">
+                <h2 class="small-title" id="tags">Tags</h2>
+                <ul class="list | cluster">
+                    {
+                        tags.map((tag) => (
+                            <li>
+                                <Tag tag={tag} />
+                            </li>
+                        ))
+                    }
+                </ul>
+            </section>
+        </div>
+    </div>
+</PageWrapper>
+
+<style>
+    .small-title {
+        color: var(--site-accent);
+    }
+
+    .post-category {
+        font-weight: 400;
+    }
+
+    .list-spacer {
+        & > * + * {
+            margin-block-start: var(--space-l);
+        }
+    }
+
+    .list {
+        margin-block-start: var(--space-3xs);
+    }
+
+    .tags {
+        & .cluster {
+            row-gap: 0.75rem;
+        }
+    }
+
+    :global(.page[data-template="posts_taxonomies"] :is(.tag, .post-category)) {
+        font-size: var(--step-0);
+    }
+</style>

@@ -1,0 +1,14 @@
+:is(.book, .featured-book, .book-preview) {
+    & img {
+        aspect-ratio: 6 / 9;
+        object-fit: cover;
+        border-radius: var(--rounded-xs);
+        box-shadow: var(--shadow-base);
+        transition: transform 0.2s, box-shadow 0.4s;
+    }
+
+    & .image-wrapper:hover img {
+        box-shadow: var(--shadow-large);
+        transform: translateY(-0.75rem);
+    }
+}

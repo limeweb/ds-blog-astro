@@ -1,0 +1,159 @@
+---
+import Backlinks from "@components/posts/Backlinks.astro";
+import Breadcrumbs from "@components/navigation/Breadcrumbs.astro";
+import type { CollectionEntry } from "astro:content";
+import PageHeader from "@components/document/PageHeader.astro";
+import PageWrapper from "@components/document/PageWrapper.astro";
+import RemoteImage from "@components/document/RemoteImage.astro";
+import { getCollection } from "astro:content";
+
+export async function getStaticPaths() {
+    const books = await getCollection("books");
+
+    return books.map((book) => ({
+        params: {
+            book: book.id,
+        },
+        props: { book },
+    }));
+}
+
+const { book } = Astro.props;
+
+let backlinks: Array<CollectionEntry<"posts"> | CollectionEntry<"reviews">> =
+    [];
+const posts = await getCollection("posts");
+const reviews = await getCollection("reviews");
+const allContent = [...posts, ...reviews];
+/* WARN: gonna be slow */
+for (let i = 0; i < allContent.length; i++) {
+    const entry = allContent[i];
+    // search raw/uncompiled markdown post body and match regexp looking for book id
+    // find 17-char string starting with airtable "rec"
+    // switch to concatenated value using current `book.id` from dynamic route
+    const regexp = new RegExp('"' + book.id + '"', "g");
+    const res = entry.body?.search(regexp);
+    if (res !== -1) {
+        backlinks.push(entry);
+    }
+
+    /* const regexp = /"(rec\S{14})*"/g; // /FeaturedBook id="(\S{17})*"/g
+    const matchedBookIDs = entry.body?.matchAll(regexp);
+    if (matchedBookIDs) {
+        for (const match of matchedBookIDs) {
+            // console.log(`Found ${match[0]}`);
+            if (match[1] == book.id) {
+                backlinks.push(entry);
+            }
+        }
+    }
+    */
+}
+---
+
+<PageWrapper pageID={book.id}>
+    <div class="content-wrapper paragraph">
+        <Breadcrumbs collection="books" />
+        <PageHeader title={book.data["Full Title"] as string} type="Book" />
+        <div class="author">
+            <p>{book.data["Full Name (from Author(s))"]}</p>
+        </div>
+        <div class="book-data">
+            <div class="image-wrapper">
+                <RemoteImage
+                    alt={(book?.data["Full Title"] as string) ?? ""}
+                    aspectRatio={[6, 9]}
+                    loading="eager"
+                    src={book?.data.Cover?.[0].url ?? ""}
+                    width={600}
+                />
+            </div>
+            <div class="text-wrapper">
+                <dl>
+                    <dt><strong>Shelves</strong></dt>
+                    <dd>{book.data["Name (from Shelves)"]?.join(", ")}</dd>
+                    {book.data["Series Name"] && (
+                        <dt><strong>Series</strong></dt>
+                        <dd>{`#${book.data["Series Number"]} in ${book.data["Series Name"]}`}</dd>
+                    )}
+                    <dt><strong>Pages</strong></dt>
+                    <dd>{book.data["Page Count"]}</dd>
+                    <dt><strong>Edition</strong></dt>
+                    <dd>
+                        {book.data.Publisher ? `${book.data.Publisher} (${book.data["Published Date"]})` : `${book.data["Published Date"]}`}
+                    </dd>
+                    {book.data["Edition Notes"] && (
+                        <dt><strong>Edition Notes</strong></dt>
+                        <dd>{book.data["Edition Notes"]}</dd>
+                    )}
+                    <dt><strong>ISBN</strong></dt>
+                    <dd>{book.data.ISBN}</dd>
+                    <dt><strong>Format</strong></dt>
+                    <dd>{book.data.Format}</dd>
+                    <dt><strong>Own?</strong></dt>
+                    <dd>{book.data["Own?"] ? "Yes" : "No"}</dd>
+                    {book.data["Open Library URL"] && (
+                        <dt><strong>Open Library</strong></dt>
+                        <dd>
+                            <a
+                                href={book.data["Open Library URL"]}
+                                target="_blank"
+                            >
+                                {book.data["Open Library ID"] ?? "Link"}
+                            </a>
+                        </dd>
+                    )}
+                </dl>
+            </div>
+        </div>
+    </div>
+    <div class="post-footer | content-wrapper paragraph">
+        {
+            backlinks.length > 0 && (
+                <Backlinks backlinks={backlinks} type="books" />
+            )
+        }
+    </div>
+</PageWrapper>
+
+<style>
+    .author {
+        margin-block-start: var(--space-xs);
+        font-size: var(--step-1);
+    }
+
+    .book-data {
+        margin-block-start: var(--space-l);
+        display: flex;
+        gap: var(--space-xl);
+    }
+
+    :global(.book-data img) {
+        border-radius: var(--rounded-xs);
+    }
+
+    .image-wrapper {
+        flex: 0 1 16rem;
+        width: 16rem;
+        border-radius: var(--rounded-xs);
+    }
+
+    .text-wrapper {
+        flex-grow: 1;
+        font-size: var(--step--1);
+
+        & dl {
+            display: grid;
+            grid-template-columns: 7rem 1fr;
+            column-gap: 1rem;
+            row-gap: var(--space-3xs);
+        }
+    }
+
+    @media screen and (max-width: 768px) {
+        .book-data {
+            flex-direction: column;
+            gap: var(--space-m);
+        }
+    }
+</style>

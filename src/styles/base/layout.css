@@ -1,0 +1,295 @@
+:root {
+    --gutter-spacing: var(--space-m);
+    --section-spacing: var(--space-3xl);
+    --wrapper-max-width: 75rem; /*1344px;*/
+    --wrapper-max-width-slim: 992px;
+    --paragraph-measure: 50rem; /*772px;*/
+    --sidebar-width: 16rem;
+}
+
+.content-wrapper {
+    position: relative;
+    max-width: clamp(16rem, var(--wrapper-max-width, 100vw), 90rem);
+    padding-inline: var(--gutter-spacing, 1rem);
+    margin-inline: auto;
+
+    &.slim {
+        --wrapper-max-width: var(--wrapper-max-width-slim);
+    }
+
+    &.paragraph {
+        --wrapper-max-width: var(--paragraph-measure);
+    }
+}
+
+:is(.post-content, .page-content) {
+    position: relative;
+    display: grid;
+    grid-template-columns:
+        [full-width-start margin-left-start] 1fr [margin-left-end body-start] var(
+            --paragraph-measure
+        )
+        [body-end margin-right-start] 1fr [margin-right-end full-width-end];
+    max-width: var(--wrapper-max-width);
+    padding-inline: var(--gutter-spacing, 1rem);
+    margin-inline: auto;
+
+    & > * {
+        grid-column: body-start / body-end;
+    }
+
+    & .full-width {
+        grid-column: full-width-start / full-width-end;
+    }
+}
+
+.with-sidebar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sidebar-gap, var(--space-l));
+
+    /* Main panel */
+    & > :first-child {
+        flex-basis: 0;
+        flex-grow: 999;
+        min-inline-size: var(--main-min-width, 50%);
+    }
+
+    /* Sidebar */
+    & > :last-child {
+        flex-basis: var(--sidebar-min-width, 25rem);
+        flex-grow: 1;
+    }
+
+    &[data-sidebar="left"] {
+        /* Sidebar */
+        & > :first-child {
+            flex-basis: var(--sidebar-min-width, 25rem);
+            flex-grow: 1;
+            min-inline-size: 0;
+        }
+
+        /* Main */
+        & > :last-child {
+            flex-basis: 0;
+            flex-grow: 999;
+            min-inline-size: var(--main-min-width, 50%);
+        }
+    }
+}
+
+.flow {
+    & > * + * {
+        margin-block-start: var(--flow-space, 1em);
+    }
+
+    &[data-tempo="lento"] {
+        --flow-space: var(--space-3xl);
+    }
+
+    &[data-tempo="largo"] {
+        --flow-space: var(--space-2xl);
+    }
+
+    &[data-tempo="adagio"] {
+        --flow-space: var(--space-xl);
+    }
+
+    &[data-tempo="andante"] {
+        --flow-space: var(--space-l);
+    }
+
+    &[data-tempo="moderato"] {
+        --flow-space: var(--space-m);
+    }
+
+    &[data-tempo="allegro"] {
+        --flow-space: var(--space-s);
+    }
+
+    &[data-tempo="presto"] {
+        --flow-space: var(--space-xs);
+    }
+
+    &[data-tempo="vivace"] {
+        --flow-space: var(--space-2xs);
+    }
+
+    &[data-tempo="prestissimo"] {
+        --flow-space: var(--space-3xs);
+    }
+}
+
+.cluster {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--cluster-space, 1em);
+    justify-content: var(--cluster-justify, flex-start);
+    align-items: var(--cluster-align, center);
+}
+
+.cover {
+    display: flex;
+    flex-direction: column;
+    min-block-size: 100%;
+    padding: var(--cover-padding, 0rem);
+
+    & > * {
+        margin-block: var(--cover-spacing, var(--size-m));
+    }
+
+    & > :first-child:not(.text) {
+        margin-block-start: 0;
+    }
+
+    & > :last-child:not(.text) {
+        margin-block-start: 0;
+    }
+
+    & > .text {
+        margin-block: auto;
+    }
+}
+
+.grid-12 {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    grid-gap: var(--gutter-spacing);
+
+    & > * {
+        grid-column: span 3;
+    }
+
+    &[data-layout="split"] {
+        & > * {
+            grid-column: span 6;
+        }
+    }
+}
+
+.fluid-grid {
+    display: grid;
+    grid-template-columns: repeat(
+        var(--grid-placement, auto-fill),
+        minmax(var(--grid-item-min-size, 16rem), 1fr)
+    );
+    gap: var(--grid-gutter, var(--space-m-l));
+
+    &[data-layout="thirds"] {
+        --grid-placement: auto-fit;
+        --grid-item-min-size: clamp(16rem, 30%, 30rem);
+    }
+
+    &[data-layout="fourths"] {
+        --grid-placement: auto-fit;
+        --grid-item-min-size: clamp(12rem, 23%, 25rem);
+    }
+}
+
+.frame {
+    position: relative;
+    display: flex;
+    aspect-ratio: var(--frame-aspect-ratio, var(--default-aspect-ratio));
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+
+    & > img {
+        inline-size: 100%;
+        block-size: 100%;
+        object-fit: cover;
+    }
+
+    &[data-aspect-ratio="1/1"] {
+        --frame-aspect-ratio: 1/1;
+    }
+
+    &[data-aspect-ratio="3/4"] {
+        --frame-aspect-ratio: 3/4;
+    }
+
+    &[data-aspect-ratio="6/4"] {
+        --frame-aspect-ratio: 6/4;
+    }
+
+    &[data-aspect-ratio="9/7"] {
+        --frame-aspect-ratio: 9/7;
+    }
+}
+
+.panes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--panes-gap, var(--space-m));
+    align-items: var(--panes-align, center);
+
+    & > * {
+        flex: 1 1
+            calc(var(--panes-width, 50%) - var(--panes-gap, var(--space-m)));
+    }
+
+    &[data-composition="diptych"] {
+        --panes-width: 50%;
+        --panes-width--offset-large: 60%;
+        --panes-width--offset-small: 40%;
+
+        &[data-offset="right"] {
+            & > :first-child {
+                --panes-width: var(--panes-width--offset-small);
+            }
+
+            & > :last-child {
+                --panes-width: var(--panes-width--offset-large);
+            }
+        }
+
+        &[data-offset="left"] {
+            & > :first-child {
+                --panes-width: var(--panes-width--offset-large);
+            }
+
+            & > :last-child {
+                --panes-width: var(--panes-width--offset-small);
+            }
+        }
+
+        &[data-layout="flipped"] {
+            & > :first-child {
+                order: 2;
+            }
+
+            & > :last-child {
+                order: 1;
+            }
+        }
+    }
+
+    &[data-composition="triptych"] {
+        --panes-width: 33.3%;
+    }
+}
+
+/* For spacing between page sections/modules */
+.sections {
+    & > * + * {
+        margin-block-start: var(--module-spacing, var(--section-spacing));
+    }
+}
+
+@media screen and (max-width: 860px) {
+    :is(.post-content, .page-content) {
+        max-width: var(--paragraph-measure);
+        grid-template-columns: [full-width-start margin-left-start margin-right-start body-start] 1fr [full-width-end margin-left-end margin-right-end body-end];
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .grid-12 {
+        grid-template-columns: 1fr;
+
+        & > * {
+            grid-column: span 1;
+        }
+    }
+}

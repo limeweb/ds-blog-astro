@@ -1,0 +1,46 @@
+---
+import BaseLayout from "@layouts/BaseLayout.astro";
+// import type { CollectionEntry } from "astro:content";
+import type { CollectionEntry } from "astro:content";
+import type { PageMeta } from "@utils/types";
+
+/* TODO: change props to accept entire page, less redundant */
+interface Props {
+    pageMeta?: PageMeta;
+    pageID?: string;
+}
+
+const { pageMeta, pageID } = Astro.props;
+
+const now = new Date();
+---
+
+<BaseLayout pageMeta={pageMeta}>
+    <main
+        class:list={["page"]}
+        data-page={pageID ?? undefined}
+        id="main-content"
+        tabindex="-1"
+    >
+        <slot />
+    </main>
+    <footer class="site-footer">
+        <span
+            >© {now.getFullYear()}, Daniel Saunders. 100% human-generated
+            content.</span
+        >
+    </footer>
+</BaseLayout>
+
+<style>
+    .page {
+        padding-block-end: var(--space-3xl);
+    }
+
+    .site-footer {
+        font-size: var(--step--2);
+        text-align: center;
+        padding-inline: var(--gutter-spacing);
+        margin-block-end: var(--space-s);
+    }
+</style>

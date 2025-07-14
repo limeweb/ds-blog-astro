@@ -1,0 +1,30 @@
+---
+import { getCollection, getEntry, render } from "astro:content";
+import Breadcrumbs from "@components/navigation/Breadcrumbs.astro";
+import PageHeader from "@components/document/PageHeader.astro";
+import PageWrapper from "@components/document/PageWrapper.astro";
+import PostsList from "@components/posts/PostsList.astro";
+import { getPageMeta } from "@utils/meta";
+
+const page = await getEntry("pages", "book-reviews");
+if (!page) {
+    throw new Error("page not found");
+}
+const { Content } = await render(page);
+
+const reviews = await getCollection("reviews");
+---
+
+<PageWrapper pageID={page.id} pageMeta={getPageMeta(page)}>
+    <div class="content-wrapper paragraph">
+        <Breadcrumbs />
+        <PageHeader title={page.data.title}>
+            <div class="preview">
+                <Content />
+            </div>
+        </PageHeader>
+        <div class="list-spacer">
+            <PostsList posts={reviews} />
+        </div>
+    </div>
+</PageWrapper>

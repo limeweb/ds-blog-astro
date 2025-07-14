@@ -1,0 +1,63 @@
+---
+import type { CollectionEntry } from "astro:content";
+import Ornament from "@components/document/Ornament.astro";
+import { format } from "@formkit/tempo";
+import { render } from "astro:content";
+
+interface Props {
+    update: CollectionEntry<"updates">;
+    padding?: boolean;
+}
+
+const { update, padding = true } = Astro.props;
+
+const { Content } = await render(update);
+---
+
+<article class="update" data-padding={padding ? "true" : "false"}>
+    <header class="cluster | with-ornament">
+        <Ornament name="star4" size={16} />
+        <time
+            class="small-title"
+            datetime={format({
+                date: update.data.date,
+                format: "YYYY-MM-DD",
+                tz: "UTC",
+            })}>{update.data.title}</time
+        >
+    </header>
+    <div class="long-text">
+        <Content />
+    </div>
+</article>
+
+<style>
+    .update {
+        position: relative;
+
+        &[data-padding="true"] {
+            padding-block-end: var(--space-xl);
+        }
+
+        & header {
+            --cluster-space: 14px;
+            color: var(--site-accent);
+        }
+
+        &::before {
+            --offset: 2rem;
+            content: "";
+            position: absolute;
+            display: block;
+            top: var(--offset);
+            left: 7px;
+            width: 1px;
+            height: calc(100% - var(--offset));
+            background-color: var(--site-border);
+        }
+    }
+
+    .long-text {
+        margin-block-start: var(--space-3xs);
+    }
+</style>

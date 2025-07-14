@@ -1,0 +1,89 @@
+---
+/* TODO: add backlinks to reviews */
+import { getCollection, render } from "astro:content";
+import Breadcrumbs from "@components/navigation/Breadcrumbs.astro";
+import Ornament from "@components/document/Ornament.astro";
+import PageHeader from "@components/document/PageHeader.astro";
+import PageWrapper from "@components/document/PageWrapper.astro";
+import PostInfo from "@components/posts/PostInfo.astro";
+import Rating from "@components/books/Rating.astro";
+import { format } from "@formkit/tempo";
+
+export async function getStaticPaths() {
+    const reviews = await getCollection("reviews");
+
+    return reviews.map((review) => ({
+        params: {
+            review: review.id,
+        },
+        props: { review },
+    }));
+}
+
+const { review } = Astro.props;
+
+const { Content } = await render(review);
+// const book = await getEntry(review.data.book);
+---
+
+<PageWrapper pageID={review.id}>
+    <div class="content-wrapper paragraph">
+        <Breadcrumbs collection="reviews" />
+        <PageHeader title={review.data.title} type="Review" />
+        <PostInfo>
+            <p>
+                <strong>Posted: </strong>
+                <time
+                    datetime={format({
+                        date: review.data.date,
+                        format: "YYYY-MM-DD",
+                        tz: "UTC",
+                    })}
+                    >{
+                        format({
+                            date: review.data.date,
+                            format: "MMM D, YYYY",
+                            tz: "UTC",
+                        })
+                    }</time
+                >
+            </p>
+            {
+                review.data.updated_date && (
+                    <p>
+                        <strong>Last Updated: </strong>
+                        <time
+                            datetime={format({
+                                date: review.data.updated_date,
+                                format: "YYYY-MM-DD",
+                                tz: "UTC",
+                            })}
+                        >
+                            {format({
+                                date: review.data.updated_date,
+                                format: "MMM D, YYYY",
+                                tz: "UTC",
+                            })}
+                        </time>
+                    </p>
+                )
+            }
+            <p>
+                <strong>Rating: </strong><Rating rating={review.data.rating} />
+            </p>
+        </PostInfo>
+    </div>
+    <div class="post-content | long-text">
+        <Content />
+        <div class="post-endcap">
+            <Ornament color="var(--site-accent)" name="bracket" size={20} />
+        </div>
+    </div>
+    <div class="post-footer | content-wrapper paragraph"></div>
+</PageWrapper>
+
+<style>
+    .post-content {
+        padding-block-start: var(--space-l);
+    }
+</style>

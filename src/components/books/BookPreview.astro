@@ -1,0 +1,57 @@
+---
+import type { CollectionEntry } from "astro:content";
+import RemoteImage from "@components/document/RemoteImage.astro";
+
+interface Props {
+    book: CollectionEntry<"books">;
+}
+
+const { book } = Astro.props;
+
+const link = `/library/books/${book.id}`;
+---
+
+<article class="book-preview">
+    <a class="image-wrapper" href={link}>
+        <RemoteImage
+            alt={(book?.data["Full Title"] as string) ?? ""}
+            aspectRatio={[2, 3]}
+            loading="lazy"
+            src={book?.data.Cover?.[0].url ?? ""}
+            width={400}
+        />
+    </a>
+    <p class="title"><a class="title-link" href={link}>{book.data.Title}</a></p>
+    <p class="author">{book.data["Full Name (from Author(s))"]}</p>
+</article>
+
+<style>
+    .image-wrapper {
+        position: relative;
+        display: block;
+
+        &:hover img {
+            box-shadow: var(--shadow-large);
+            transform: translateY(-0.75rem);
+        }
+
+        &:hover + .title a {
+            color: var(--site-accent);
+            text-decoration-color: var(--site-accent);
+            text-underline-offset: 5px;
+        }
+    }
+
+    .title {
+        margin-block-start: var(--space-2xs);
+        font-size: var(--step-0);
+        font-family: var(--font-heading);
+        font-weight: var(--font-heading-weight);
+        line-height: var(--leading-tight);
+    }
+
+    .author {
+        margin-block-start: 4px;
+        font-size: var(--step--1);
+    }
+</style>

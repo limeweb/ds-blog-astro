@@ -1,0 +1,27 @@
+---
+import { getEntry, render } from "astro:content";
+import Breadcrumbs from "@components/navigation/Breadcrumbs.astro";
+import Ornament from "@components/document/Ornament.astro";
+import PageHeader from "@components/document/PageHeader.astro";
+import PageWrapper from "@components/document/PageWrapper.astro";
+import { getPageMeta } from "@utils/meta";
+
+const page = await getEntry("pages", "colophon");
+if (!page) {
+    throw new Error("page not found");
+}
+const { Content } = await render(page);
+---
+
+<PageWrapper pageID={page.id} pageMeta={getPageMeta(page)}>
+    <div class="content-wrapper paragraph">
+        <Breadcrumbs />
+        <PageHeader title={page.data.title} />
+    </div>
+    <div class="page-content | long-text">
+        <Content />
+        <div class="post-endcap">
+            <Ornament color="var(--site-accent)" name="bracket" size={20} />
+        </div>
+    </div>
+</PageWrapper>

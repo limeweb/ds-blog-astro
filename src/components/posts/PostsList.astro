@@ -1,0 +1,35 @@
+---
+import type { CollectionEntry } from "astro:content";
+import PostPreview from "@components/posts/PostPreview.astro";
+import { isBefore } from "@formkit/tempo";
+
+interface Props {
+    posts?: CollectionEntry<"posts">[] | CollectionEntry<"reviews">[];
+}
+
+const { posts } = Astro.props;
+---
+
+<ul class="posts-list">
+    {
+        posts
+            ?.sort((a, b) => (isBefore(a.data.date, b.data.date) ? 1 : -1))
+            .map((post) => (
+                <li>
+                    <PostPreview post={post} />
+                </li>
+            ))
+    }
+</ul>
+
+<style>
+    :global(.posts-list > * + *) {
+        margin-block-start: var(--space-xl);
+    }
+
+    @media screen and (max-width: 640px) {
+        :global(.posts-list > * + *) {
+            margin-block-start: var(--space-l);
+        }
+    }
+</style>

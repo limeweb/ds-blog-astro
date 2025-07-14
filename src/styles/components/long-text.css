@@ -1,0 +1,120 @@
+.long-text {
+    --element-spacing: var(--space-m);
+
+    & > * {
+        padding-inline: var(--gutter-spacing);
+    }
+
+    & > * + * {
+        margin-block-start: var(--element-spacing);
+    }
+
+    & > :is(h2, h3) {
+        --element-spacing: var(--space-xl);
+    }
+
+    & ul:not([data-list="special"]) li {
+        position: relative;
+        padding-inline-start: calc(var(--gutter-spacing) / 2);
+
+        &::before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            top: -4px;
+            font-size: var(--step-1);
+            color: var(--site-accent);
+        }
+    }
+
+    & :is(ul, ol):not([data-list="special"]) {
+        & > * + * {
+            margin-block-start: var(--space-2xs);
+        }
+    }
+
+    & a:not(.title-link, .image-wrapper) {
+        color: var(--site-accent);
+        padding-inline: 4px;
+        border-radius: 2px;
+        text-decoration-color: var(--site-accent);
+        background-color: color-mix(
+            in srgb,
+            var(--site-accent),
+            transparent 92%
+        );
+
+        &:hover {
+            background-color: transparent;
+        }
+    }
+
+    & img {
+        border-radius: var(--rounded-xs);
+    }
+
+    & blockquote {
+        position: relative;
+        /* font-size: var(--step--1); */
+        /* max-width: 45rem; */
+        /* font-style: italic; */
+        color: var(--site-accent);
+        border-inline-start: 2px solid var(--site-accent);
+        margin-inline-start: var(--gutter-spacing);
+
+        &::before {
+            content: "“";
+            position: relative;
+            top: -1rem;
+            left: -1.5rem;
+            font-family: var(--font-heading);
+            font-weight: var(--font-heading-weight);
+            font-style: normal;
+            font-size: var(--step-5);
+            color: var(--site-accent);
+        }
+    }
+
+    & .featured-book {
+        --element-spacing: var(--space-xl);
+        margin-block-end: calc(var(--element-spacing) - var(--space-m));
+    }
+
+    & .featured-book-list {
+        --element-spacing: var(--space-l);
+        /* grid-column: full-width-start / full-width-end; */
+    }
+
+    /* Inline code */
+    & :is(p, li) code {
+        position: relative;
+        top: -1px;
+        font-size: 0.75em;
+        background-color: color-mix(
+            in srgb,
+            var(--color-parchment-dark),
+            white 20%
+        );
+        border-radius: 2px;
+        padding-inline: 7px;
+        padding-block: 3px;
+        border: 1px solid color-mix(in srgb, var(--site-border), black 5%);
+    }
+}
+
+@media screen and (max-width: 860px) {
+    .long-text {
+        & > * {
+            padding-inline: 0;
+        }
+
+        & blockquote {
+            margin-inline-start: 0;
+            padding-inline-start: var(--gutter-spacing);
+
+            &::before {
+                left: 0;
+            }
+        }
+    }
+}

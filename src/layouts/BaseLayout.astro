@@ -1,0 +1,29 @@
+---
+import "@styles/site.css";
+import HeadAssets from "@components/document/HeadAssets.astro";
+import HeadMeta from "@components/document/HeadMeta.astro";
+import type { PageMeta } from "@utils/types";
+
+interface Props {
+    pageMeta?: PageMeta;
+}
+
+const { pageMeta } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+        <HeadMeta
+            id={pageMeta?.id}
+            meta={pageMeta?.meta}
+            openGraph={pageMeta?.openGraph}
+        />
+        <HeadAssets />
+    </head>
+    <body>
+        <slot />
+    </body>
+</html>

@@ -1,0 +1,83 @@
+---
+import Ornament from "@components/document/Ornament.astro";
+import { getCollection } from "astro:content";
+
+const categories = await getCollection("postCategories");
+const posts = await getCollection("posts", ({ data }) => data.archived != true && data.draft != true);
+const archived = await getCollection("posts", ({ data}) => data.archived == true);
+
+const currentURL = Astro.url.pathname;
+let isPostsIndex = false;
+let isPostsArchive = false;
+// check with/without trailing slash
+if (currentURL == '/posts' || currentURL == '/posts/') {
+    isPostsIndex = true;
+}
+// if (currentURL == '/posts/archive' || currentURL == '/posts/archive/') {
+//     isPostsArchive = true
+// }
+---
+
+<div class="post-categories">
+    <ul class="list | cluster">
+        <li class="post-category | with-ornament | cluster">
+            <Ornament color={isPostsIndex ? 'var(--site-accent)' : 'currentColor'} name="leaf" size={15} />
+            <div>
+                <!-- prettier-ignore -->
+                <a aria-current={isPostsIndex ? 'page' : 'false'} href="/posts">Chron</a>
+            </div>
+        </li>
+        {
+            categories.map((category) => {
+                const associatedPosts = posts.filter(
+                    (post) => post.data.category.id == category.id
+                );
+                let isCurrent = false;
+                // check with/without trailing slash
+                if (currentURL == `/posts/${category.id}` || currentURL == `/posts/${category.id}/`) {
+                    isCurrent = true;
+                }
+                const postCount = associatedPosts.length;
+                return (
+                    postCount > 0 && (
+                        <li class="post-category | with-ornament | cluster">
+                            <Ornament color={isCurrent ? 'var(--site-accent)' : 'currentColor'} name={category.data.ornament} size={20} />
+                            <div>
+                                <!-- prettier-ignore -->
+                                <a aria-current={isCurrent ? 'page' : 'false'} href={`/posts/${category.id}`}>{category.data.title}</a>
+                            </div>
+                        </li>
+                    )
+                );
+            })
+        }
+        <li>
+            <div class="category">
+                <a href="/posts/taxonomies">#Tags</a>
+            </div>
+        </li>
+    </ul>
+</div>
+
+<style>
+    .post-categories {
+        margin-block-start: var(--space-l);
+        border-block: 1px solid var(--site-border);
+        padding-block: var(--space-xs);
+    }
+
+    .list {
+        column-gap: var(--space-m);
+        row-gap: var(--space-3xs);
+    }
+
+    .post-category {
+        font-size: var(--step-0);
+        font-weight: 400;
+
+        & a[aria-current="page"] {
+            color: var(--site-accent);
+            text-decoration-color: transparent;
+        }
+    }
+</style>

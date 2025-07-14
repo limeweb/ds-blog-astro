@@ -1,0 +1,69 @@
+---
+import type { PageMeta } from "@utils/types";
+import { siteDefaults } from "@utils/siteDefaults";
+
+type Props = PageMeta;
+
+const { id, meta, openGraph } = Astro.props;
+
+const currentPath = Astro.url.pathname;
+let canonicalURL = siteDefaults.domain;
+
+if (currentPath == "/") {
+    canonicalURL += "/";
+} else {
+    if (currentPath.endsWith("/")) {
+        canonicalURL += currentPath;
+    } else {
+        canonicalURL += currentPath + "/";
+    }
+}
+
+let title = meta?.title;
+if (title) {
+    if (currentPath != "/") {
+        title += ` • ${siteDefaults.title}`;
+    }
+} else {
+    title = siteDefaults.meta.title;
+}
+---
+
+<!-- General -->
+<title>{title}</title>
+<meta
+    content={meta?.description ?? siteDefaults.meta.description}
+    name="description"
+/>
+<link href={canonicalURL} rel="canonical" />
+<meta content={Astro.generator} name="generator" />
+<meta content="index, follow" name="robots" />
+<!-- OG -->
+<meta
+    content={openGraph?.title ?? siteDefaults.meta.title}
+    property="og:title"
+/>
+<meta
+    content={openGraph?.description ?? siteDefaults.meta.description}
+    property="og:description"
+/>
+<meta content="website" property="og:type" />
+<meta content={`${siteDefaults.domain}/og/${id}.png`} property="og:image" />
+<meta
+    content={openGraph?.title ?? siteDefaults.meta.title}
+    property="og:image:alt"
+/>
+<meta content={canonicalURL} property="og:url" />
+<!-- Sitemap & Feed -->
+<link href={siteDefaults.domain + "/sitemap-index.xml"} rel="sitemap" />
+<link
+    href={siteDefaults.domain + "/feed.xml"}
+    rel="alternate"
+    title="Daniel Saunders • Designer & Developer"
+    type="application/rss+xml"
+/>
+<!-- Favicon -->
+<link href="/favicon.svg" rel="icon" type="image/svg+xml" />
+<link href="/favicon-32.png" rel="icon" sizes="32x32" type="image/png" />
+<link href="/favicon-16.png" rel="icon" sizes="16x16" type="image/png" />
+<link href="/favicon.svg" rel="shortcut icon" />

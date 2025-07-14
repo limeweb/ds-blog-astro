@@ -1,0 +1,45 @@
+---
+import Breadcrumbs from "@components/navigation/Breadcrumbs.astro";
+import CategoryList from "@components/posts/CategoryList.astro";
+import PageHeader from "@components/document/PageHeader.astro";
+import PageWrapper from "@components/document/PageWrapper.astro";
+import PostsList from "@components/posts/PostsList.astro";
+import { getCollection } from "astro:content";
+
+export async function getStaticPaths() {
+    const categories = await getCollection("postCategories");
+
+    return categories.map((category) => ({
+        params: {
+            postCategory: category.id,
+        },
+        props: { category },
+    }));
+}
+
+const { category } = Astro.props;
+
+const posts = await getCollection(
+    "posts",
+    ({ data }) => data.archived != true && data.draft != true
+);
+const associatedPosts = posts.filter(
+    (post) => post.data.category.id == category.id
+);
+---
+
+<PageWrapper pageID={category.id}>
+    <div class="content-wrapper paragraph">
+        <Breadcrumbs />
+        <PageHeader
+            count={associatedPosts.length}
+            preview={category.data.description}
+            title={category.data.title}
+            type="Category"
+        />
+        <CategoryList />
+        <div class="list-spacer">
+            <PostsList posts={associatedPosts} />
+        </div>
+    </div>
+</PageWrapper>

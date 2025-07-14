@@ -1,0 +1,40 @@
+---
+import Ornament from "@components/document/Ornament.astro";
+
+interface Props {
+    title: string;
+}
+
+const { title } = Astro.props;
+---
+
+<figure class="code-block-wrapper">
+    <figcaption class="small-title | cluster">
+        <Ornament name="star4" size={14} />
+        <span>{title}</span>
+    </figcaption>
+    <slot />
+</figure>
+
+<style>
+    :global(.code-block-wrapper .astro-code) {
+        padding-inline: var(--space-m);
+    }
+
+    .small-title {
+        --cluster-space: 0.5rem;
+        font-size: var(--step--2);
+        color: var(--site-accent);
+        margin-block-end: var(--space-3xs);
+    }
+
+    @media screen and (max-width: 860px) {
+        .code-block-wrapper {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        :global(.code-block-wrapper .astro-code) {
+        }
+    }
+</style>

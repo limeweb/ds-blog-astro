@@ -1,0 +1,16 @@
+- id: notes
+  title: Notes
+  ornament: star3
+  description: Short posts, ideas, fragments, aimless thoughts.
+- id: essays
+  title: Essays
+  ornament: gothic
+  description: Compositions with a definite goal and viewpoint.
+- id: lists
+  title: Lists
+  ornament: fleur
+  description: Collections of things.
+- id: tutorials
+  title: Tutorials
+  ornament: manicule
+  description: Practical posts that show and tell.

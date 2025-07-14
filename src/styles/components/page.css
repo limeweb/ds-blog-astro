@@ -1,0 +1,12 @@
+.page-content {
+    margin-block-start: var(--space-xl);
+}
+
+/* .page[data-page="about"] .long-text ul li {
+    margin: 0;
+    padding: 0;
+
+    &::before {
+        content: "";
+    }
+} */

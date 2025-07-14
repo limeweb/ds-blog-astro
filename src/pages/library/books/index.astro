@@ -1,0 +1,35 @@
+---
+import BookPreview from "@components/books/BookPreview.astro";
+import Breadcrumbs from "@components/navigation/Breadcrumbs.astro";
+import PageHeader from "@components/document/PageHeader.astro";
+import PageWrapper from "@components/document/PageWrapper.astro";
+import { getCollection } from "astro:content";
+
+const books = await getCollection("books");
+---
+
+<PageWrapper>
+    <div class="content-wrapper">
+        <Breadcrumbs />
+        <PageHeader title="Books" />
+        <div class="list-spacer">
+            <ul class="fluid-grid">
+                {
+                    books.map((book) => (
+                        <li>
+                            <BookPreview book={book} />
+                        </li>
+                    ))
+                }
+            </ul>
+        </div>
+    </div>
+</PageWrapper>
+
+<style>
+    .fluid-grid {
+        --grid-item-min-size: 10rem;
+        column-gap: 1.5rem;
+        row-gap: var(--space-l);
+    }
+</style>

@@ -1,0 +1,90 @@
+---
+import type { CollectionEntry } from "astro:content";
+
+interface Props {
+    section: CollectionEntry<"siteNavigation">;
+}
+
+const { section } = Astro.props;
+---
+
+<section
+    aria-labelledby={section.data.title}
+    class="site-section | flow"
+    data-tempo="prestissimo"
+    id={section.id}
+>
+    <!-- <p class="small-title numeral">{section.data.numeral}</p> -->
+    <h2 id={section.data.title}>{section.data.title}</h2>
+    <p>{section.data.description}</p>
+    <ul class="links | flow" data-tempo="prestissimo">
+        {
+            section.data.links.map((link) => (
+                <li>
+                    <a
+                        href={link.href}
+                        target={link.external ? "_blank" : "_self"}
+                    >
+                        {link.title}
+                    </a>
+                </li>
+            ))
+        }
+    </ul>
+</section>
+
+<style>
+    h2 {
+        --flow-space: 0px;
+        font-size: var(--step-2);
+        /* text-align: center; */
+
+        & + p {
+            font-size: var(--step--1);
+        }
+    }
+
+    .site-section {
+        position: relative;
+
+        /* &:not(:first-of-type)::before {
+            content: "";
+            position: absolute;
+            display: block;
+            width: 1px;
+            height: 100%;
+            background-color: var(--site-border);
+            top: 0;
+            left: calc(var(--space-m) * -0.5);
+        } */
+    }
+
+    .links {
+        margin-block-start: var(--space-s);
+
+        & li {
+            position: relative;
+
+            &::before {
+                content: "¶";
+                color: var(--site-accent);
+            }
+        }
+    }
+
+    .numeral {
+        font-family: var(--font-heading);
+        font-weight: var(--font-heading-weight);
+        color: var(--site-accent);
+    }
+
+    @media screen and (max-width: 640px) {
+        h2 + p {
+            font-size: var(--step-0);
+        }
+
+        .links {
+            --flow-space: var(--space-xs);
+        }
+    }
+</style>

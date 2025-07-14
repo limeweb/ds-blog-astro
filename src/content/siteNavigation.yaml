@@ -1,0 +1,52 @@
+- id: about
+  title: Prologue
+  numeral: I
+  description: Introductions.
+  links:
+      - title: About
+        href: /about
+      - title: Now
+        href: /now
+- id: posts
+  title: Writing
+  numeral: II
+  description: My writing on various topics.
+  links:
+      - title: Latest Posts
+        href: /posts
+      # - title: Notable
+      #   href: /posts/notable
+      - title: Taxonomies
+        href: /posts/taxonomies
+      - title: Archive
+        href: /posts/archive
+      - title: RSS Feed
+        href: /feed.xml
+- id: library
+  title: Library
+  numeral: III
+  description: Reading activity and reviews.
+  links:
+      # - title: Recent Reads
+      #   href: /library/activity
+      - title: Books
+        href: /library/books
+      - title: Reviews
+        href: /library/reviews
+- id: elsewhere
+  title: Elsewhere
+  numeral: IV
+  description: Other projects and websites.
+  links:
+      - title: Web Design Studio
+        href: https://ds-design-studio.com/
+        external: true
+- id: appendix
+  title: Appendix
+  numeral: V
+  description: Final thoughts & addenda.
+  links:
+      - title: Colophon
+        href: /colophon
+      # - title: Site Archive
+      #   href: /site-archive

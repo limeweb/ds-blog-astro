@@ -1,0 +1,57 @@
+---
+import { getCollection, getEntry, render } from "astro:content";
+import Breadcrumbs from "@components/navigation/Breadcrumbs.astro";
+import NowUpdate from "@components/about/NowUpdate.astro";
+import PageHeader from "@components/document/PageHeader.astro";
+import PageWrapper from "@components/document/PageWrapper.astro";
+import { getPageMeta } from "@utils/meta";
+import { isBefore } from "@formkit/tempo";
+
+const page = await getEntry("pages", "now");
+if (!page) {
+    throw new Error("page not found");
+}
+const { Content } = await render(page);
+
+const updates = await getCollection(
+    "updates",
+    ({ data }) => data.archived != true
+);
+---
+
+<PageWrapper pageID={page.id} pageMeta={getPageMeta(page)}>
+    <div class="content-wrapper paragraph">
+        <Breadcrumbs />
+        <PageHeader title={page.data.title}>
+            <div class="preview">
+                <Content />
+            </div>
+        </PageHeader>
+        <div class="list-spacer">
+            <ul class="updates">
+                {
+                    updates
+                        .sort((a, b) =>
+                            isBefore(a.data.date, b.data.date) ? 1 : -1
+                        )
+                        .map((update, i, arr) => (
+                            <li>
+                                <NowUpdate
+                                    padding={i == arr.length - 1 ? false : true}
+                                    update={update}
+                                />
+                            </li>
+                        ))
+                }
+            </ul>
+        </div>
+    </div>
+</PageWrapper>
+
+<style>
+    .updates {
+        & > * + * {
+            margin-block-start: 0.5rem;
+        }
+    }
+</style>

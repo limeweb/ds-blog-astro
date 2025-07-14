@@ -1,0 +1,25 @@
+---
+import type { CollectionEntry } from "astro:content";
+import Ornament from "@components/document/Ornament.astro";
+
+interface Props {
+    rating: CollectionEntry<"reviews">["data"]["rating"];
+}
+
+const { rating } = Astro.props;
+
+let numericRating = 0.0;
+if (rating) {
+    numericRating = parseFloat(rating);
+}
+---
+
+<span class="rating">{numericRating} / 5</span>
+
+<style>
+    .rating {
+        font-size: var(--step--1);
+        font-weight: 700;
+        line-height: 1.15;
+    }
+</style>

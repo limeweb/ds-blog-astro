@@ -1,0 +1,75 @@
+---
+import { getCollection, getEntry, render } from "astro:content";
+import Breadcrumbs from "@components/navigation/Breadcrumbs.astro";
+import CategoryList from "@components/posts/CategoryList.astro";
+import PageHeader from "@components/document/PageHeader.astro";
+import PageWrapper from "@components/document/PageWrapper.astro";
+import PostsList from "@components/posts/PostsList.astro";
+import { format } from "@formkit/tempo";
+import { getPageMeta } from "@utils/meta";
+
+const posts = await getCollection(
+    "posts",
+    ({ data }) => data.archived != true && data.draft != true
+);
+const postsByYear = Object.entries(
+    Object.groupBy(posts, ({ data }) => {
+        return format({ date: data.date, format: "YYYY", tz: "UTC" });
+    })
+);
+
+const page = await getEntry("pages", "posts-index");
+if (!page) {
+    throw new Error("page not found");
+}
+const { Content } = await render(page);
+---
+
+<PageWrapper pageID={page.id} pageMeta={getPageMeta(page)}>
+    <div class="content-wrapper paragraph">
+        <Breadcrumbs />
+        <PageHeader title={page.data.title}>
+            <div class="preview">
+                <Content />
+            </div>
+        </PageHeader>
+        <CategoryList />
+        <div class="posts-year-list | list-spacer">
+            {
+                postsByYear
+                    .sort((a, b) => parseInt(b[0]) - parseInt(a[0]))
+                    .map(([section, list]) => (
+                        <section aria-labelledby={section} class="year">
+                            <h2 id={section}>{section}</h2>
+                            <PostsList posts={list} />
+                        </section>
+                    ))
+            }
+        </div>
+        <div class="list-spacer">
+            <a class="button-link" href="/posts/archive">View Archived</a>
+        </div>
+    </div>
+</PageWrapper>
+
+<style>
+    .posts-year-list {
+        & > * + * {
+            margin-block-start: var(--space-xl);
+        }
+    }
+
+    h2 {
+        font-size: var(--step-3);
+        margin-block-end: var(--space-s);
+    }
+
+    @media screen and (max-width: 640px) {
+        .posts-year-list {
+            & > * + * {
+                border-block-start: 1px solid var(--site-accent);
+                padding-block-start: var(--space-s);
+            }
+        }
+    }
+</style>

@@ -1,0 +1,84 @@
+---
+import { getCollection, getEntries } from "astro:content";
+import Breadcrumbs from "@components/navigation/Breadcrumbs.astro";
+import type { CollectionEntry } from "astro:content";
+import Ornament from "@components/document/Ornament.astro";
+import PageHeader from "@components/document/PageHeader.astro";
+import PageWrapper from "@components/document/PageWrapper.astro";
+import PostsList from "@components/posts/PostsList.astro";
+
+export async function getStaticPaths() {
+    const tags = await getCollection("postTags");
+    // const posts = await getCollection(
+    //     "posts",
+    //     ({ data }) => data.archived != true && data.draft != true
+    // );
+
+    return tags.map((tag) => {
+        return {
+            params: {
+                postTag: `/tags/${tag.id}`,
+            },
+            props: { tag },
+        };
+    });
+}
+
+const { tag } = Astro.props;
+
+const posts = await getCollection("posts", ({ data }) => data.draft != true);
+// const associatedPosts = posts.filter((post) =>
+//     post.data.tags?.includes(post.id)
+// );
+const associatedPosts: Array<CollectionEntry<"posts">> = [];
+for (let i = 0; i < posts.length; i++) {
+    const post = posts[i];
+    if (post.data.tags) {
+        const postTags = await getEntries(post.data.tags);
+        if (postTags.some((postTag) => postTag.id == tag.id)) {
+            associatedPosts.push(post);
+        }
+    }
+}
+---
+
+<PageWrapper pageID={tag.id}>
+    <div class="content-wrapper paragraph">
+        <Breadcrumbs collection="tags" />
+        <PageHeader
+            count={associatedPosts.length}
+            title={tag.data.title}
+            type="Tag"
+        />
+        <div class="post-tags">
+            <ul class="list | cluster">
+                <li class="post-category | with-ornament | cluster">
+                    <Ornament name="leaf" size={15} /><a href="/posts"
+                        >All Posts</a
+                    >
+                </li>
+                <li><a href="/posts/taxonomies">#All Tags</a></li>
+            </ul>
+        </div>
+        <div class="list-spacer">
+            <PostsList posts={associatedPosts} />
+        </div>
+    </div>
+</PageWrapper>
+
+<style>
+    .post-tags {
+        border-block: 1px solid var(--site-border);
+        padding-block: var(--space-xs);
+        margin-block-start: var(--space-l);
+    }
+
+    .list {
+        --cluster-space: var(--space-m);
+    }
+
+    .post-category {
+        font-size: var(--step-0);
+        font-weight: 400;
+    }
+</style>

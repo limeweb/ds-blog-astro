@@ -1,0 +1,88 @@
+---
+import Ornament from "@components/document/Ornament.astro";
+import PageWrapper from "@components/document/PageWrapper.astro";
+import SiteSection from "@components/navigation/SiteSection.astro";
+import { getCollection } from "astro:content";
+
+const siteNavigation = await getCollection("siteNavigation");
+---
+
+<PageWrapper>
+    <div class="content-wrapper">
+        <nav class="breadcrumbs">
+            <a href="/">Index</a>
+        </nav>
+        <header>
+            <div class="name | cluster">
+                <p class="small-title">Daniel Saunders</p>
+                <Ornament color="var(--site-accent)" name="star4" size={20} />
+                <p class="small-title">Los Angeles, CA</p>
+            </div>
+            <h1 class="title">
+                Web designer, reader of tomes, etymologically accurate amateur.†
+            </h1>
+            <p class="subtitle">
+                <sup>†</sup>Someone who does things just for the love of it (and
+                scorns AI as the crutch of the dull).
+            </p>
+            <div class="links | list-spacer | home-grid">
+                {
+                    siteNavigation.map((section) => (
+                        <SiteSection section={section} />
+                    ))
+                }
+            </div>
+        </header>
+    </div>
+</PageWrapper>
+
+<style>
+    h1 {
+        font-size: var(--step-6);
+        margin-block-start: var(--space-2xs);
+    }
+
+    header {
+        margin-block-start: var(--space-2xl);
+    }
+
+    .subtitle {
+        margin-block-start: var(--space-m);
+        font-size: var(--step--1);
+        font-style: italic;
+    }
+
+    .name {
+        column-gap: 0.75rem;
+        row-gap: 0;
+    }
+
+    .home-grid {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: var(--space-m);
+    }
+
+    .breadcrumbs {
+        font-size: var(--step--1);
+        margin-block-start: var(--space-xs);
+    }
+
+    @media screen and (max-width: 800px) {
+        .home-grid {
+            grid-template-columns: repeat(3, 1fr);
+            row-gap: var(--space-xl);
+        }
+    }
+
+    @media screen and (max-width: 640px) {
+        h1 {
+            font-size: var(--step-5);
+            margin-block-start: var(--space-s);
+        }
+
+        .home-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
