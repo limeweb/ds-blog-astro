@@ -14,7 +14,11 @@ const { update, padding = true } = Astro.props;
 const { Content } = await render(update);
 ---
 
-<article class="update" data-padding={padding ? "true" : "false"}>
+<article
+    class="update"
+    data-padding={padding ? "true" : "false"}
+    id={update.id}
+>
     <header class="cluster | with-ornament">
         <Ornament name="star4" size={16} />
         <time
