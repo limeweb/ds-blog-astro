@@ -2,4 +2,4 @@
 
 ## About
 
-My personal site featuring writing, project, and reading activity, built in Astro.
+My [personal site](https://daniel-saunders.com) featuring writing, project, and reading activity, built in Astro.

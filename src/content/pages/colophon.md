@@ -7,4 +7,4 @@ The design of this site is primarly centered around the two main typefaces—the
 
 This site is proudly hand-crafted with [Astro](https://astro.build) and is deployed as a static site on [Cloudflare Workers](https://developers.cloudflare.com/workers/framework-guides/web-apps/astro). Posts are written in Markdown/MDX, with additional content coming from Airtable (i.e., book and library data). No AI was used, or will be used, at any point in the process.
 
-The full [source code](https://github.com/dsaunders88) is publicly viewable on GitHub.
+The full [source code](https://github.com/dsaunders88/ds-blog-astro) is publicly viewable on GitHub.
