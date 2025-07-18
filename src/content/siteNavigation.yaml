@@ -41,6 +41,12 @@
       - title: Web Design Studio
         href: https://ds-design-studio.com/
         external: true
+      - title: Bluesky
+        href: https://bsky.app/profile/daniel-saunders.com
+        external: true
+      - title: Mastodon
+        href: https://mstdn.social/@dsaunders
+        external: true
 - id: appendix
   title: Appendix
   numeral: V

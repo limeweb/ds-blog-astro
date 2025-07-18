@@ -22,7 +22,7 @@ function assignLink(
             href = `/library/reviews/${entry.id}`;
             break;
         case "updates":
-            href = `/about/now#${entry.id}`;
+            href = `/now#${entry.id}`;
             break;
     }
     return href;

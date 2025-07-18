@@ -64,4 +64,10 @@ const { Content } = await render(update);
     .long-text {
         margin-block-start: var(--space-3xs);
     }
+
+    @media screen and (max-width: 860px) {
+        .long-text {
+            padding-inline-start: var(--space-m);
+        }
+    }
 </style>

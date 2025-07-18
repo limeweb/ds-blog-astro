@@ -48,7 +48,12 @@ if (title) {
     property="og:description"
 />
 <meta content="website" property="og:type" />
-<meta content={`${siteDefaults.domain}/og/${id}.png`} property="og:image" />
+<meta
+    content={currentPath == "/"
+        ? `${siteDefaults.domain}/images/default-og.png`
+        : `${siteDefaults.domain}/og/${id}.png`}
+    property="og:image"
+/>
 <meta
     content={openGraph?.title ?? siteDefaults.meta.title}
     property="og:image:alt"
