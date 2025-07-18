@@ -12,7 +12,7 @@ My [personal site](https://daniel-saunders.com) featuring writing, projects, and
 > This repository reflects my own copyrighted work (both the content and the code itself) and should not be re-used as a template. Please feel free to look around and inspect anything you wish, but I would appreciate it if you do not copy it for your own purposes. 🙏
 
 - Built with [Astro](https://astro.build/) and Typescript
-- Styled with vanilla CSS, optimized with [Lightning CSS](https://lightningcss.dev/)
+- Styled with vanilla CSS, with patterns based on [Every Layout](https://every-layout.dev/) and optimized with [Lightning CSS](https://lightningcss.dev/)
 - Content written in Markdown/MDX, with additional data from Airtable
 - Deployed on [Cloudflare Workers](https://workers.cloudflare.com/)
 - Privacy-focused analytics with [Fathom](https://usefathom.com/)
