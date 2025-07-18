@@ -19,6 +19,7 @@
     --step-4: clamp(2.7466rem, 2.6404rem + 0.5307vw, 3.0518rem);
     --step-5: clamp(3.4332rem, 3.3005rem + 0.6634vw, 3.8147rem);
     --step-6: clamp(4.2915rem, 4.1257rem + 0.8293vw, 4.7684rem);
+    --step-7: clamp(5.3644rem, 5.1571rem + 1.0366vw, 5.9605rem);
 
     /* Fluid space scale */
     /* @link https://utopia.fyi/space/calculator?c=320,18,1.25,1240,20,1.25,6,2,&s=0.75|0.5|0.25,1.5|2|3|4|6,s-l&g=s,l,xl,12 */

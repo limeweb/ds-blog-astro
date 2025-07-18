@@ -13,6 +13,7 @@ My [personal site](https://daniel-saunders.com) featuring writing, projects, and
 
 - Built with [Astro](https://astro.build/) and Typescript
 - Styled with vanilla CSS, with patterns based on [Every Layout](https://every-layout.dev/) and optimized with [Lightning CSS](https://lightningcss.dev/)
+- Fluid typography with [Utopia](https://utopia.fyi/)
 - Content written in Markdown/MDX, with additional data from Airtable
 - Deployed on [Cloudflare Workers](https://workers.cloudflare.com/)
 - Privacy-focused analytics with [Fathom](https://usefathom.com/)
